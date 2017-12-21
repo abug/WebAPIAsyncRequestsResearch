@@ -1,39 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+using System.Diagnostics;
+using System.Threading;
 using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace WebAPIAsyncRequestsResearch.Controllers
 {
 	public class ValuesController : ApiController
 	{
 		// GET api/values
-		public IEnumerable<string> Get()
+		public JsonResult<ValueObject> Get()
 		{
-			return new string[] { "value1", "value2" };
+			Trace.WriteLine("Parameterless get started...");
+
+			var randomGenerator = new Random();
+			var randomTimeSpan = randomGenerator.Next(2, 15);
+
+			Thread.Sleep(randomTimeSpan * 1000);
+
+			return Json(new ValueObject
+			{
+				Id = 1,
+				Value = "Value 1",
+				TimeSpan = randomTimeSpan
+			});
 		}
 
 		// GET api/values/5
-		public string Get(int id)
+		public JsonResult<ValueObject> Get(int id)
 		{
-			return "value";
-		}
+			Trace.WriteLine("Parameterized get is started...");
 
-		// POST api/values
-		public void Post([FromBody]string value)
-		{
-		}
+			var randomGenerator = new Random();
+			var randomTimeSpan = randomGenerator.Next(2, 15);
 
-		// PUT api/values/5
-		public void Put(int id, [FromBody]string value)
-		{
-		}
+			Thread.Sleep(randomTimeSpan * 1000);
 
-		// DELETE api/values/5
-		public void Delete(int id)
-		{
+			return Json(new ValueObject
+			{
+				Id = id,
+				Value = $"Value {id}",
+				TimeSpan = randomTimeSpan
+			});
 		}
+	}
+
+	public class ValueObject
+	{
+		public int Id { get; set; }
+		public string Value { get; set; }
+		public int TimeSpan { get; set; }
 	}
 }

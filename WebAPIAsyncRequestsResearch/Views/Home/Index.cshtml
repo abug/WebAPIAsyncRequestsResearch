@@ -1,24 +1,64 @@
-﻿<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>ASP.NET Web API is a framework that makes it easy to build HTTP services that reach
-        a broad range of clients, including browsers and mobile devices. ASP.NET Web API
-        is an ideal platform for building RESTful applications on the .NET Framework.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301870">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301871">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>
-    </div>
-</div>
+﻿@section head{
+    <script type="text/javascript" language="javascript">
+        var AR = {} || AR;
+
+        AR.url = '/api/values';
+
+        AR.getRandomInt = function() {
+            var min = Math.ceil(1);
+            var max = Math.floor(10000);
+            return Math.floor(Math.random() * (max - min)) +
+                min; //The maximum is exclusive and the minimum is inclusive
+        }
+
+        AR.getWithInlinePromise = function() {
+            $.when($.getJSON(AR.url,
+                {},
+                function(data, textStatus) {
+                    console.log(data);
+                })).done(function() {
+                console.log('getValue done...');
+            }).then($.getJSON(AR.url + '/' + AR.getRandomInt(),
+                {},
+                function(data, textStatus) {
+                    console.log(data);
+                })).done(function() {
+                console.log('getValueById done..');
+            });
+        };
+
+
+        AR.getWithPromise = function() {
+            $.when($.Deferred(AR.getValue)).done(function() {
+                console.log('getValue done...');
+            }).then($.Deferred(AR.getValueById)).done(function() {
+                console.log('getValueById done...');
+            });
+        };
+
+        AR.getValue = function() {
+            console.log('getValue start...');
+            $.getJSON(AR.url,
+                {},
+                function(data, textStatus) {
+                    console.log(data);
+
+                    //AR.getValueById();
+                });
+        };
+
+        AR.getValueById = function() {
+            console.log('getValueById start...');
+
+            $.getJSON(AR.url + '/' + AR.getRandomInt(),
+                {},
+                function(data, textStatus) {
+                    console.log(data);
+                });
+        };
+
+
+    </script>
+}
+
+<div>Interesting is under the hood.</div>
